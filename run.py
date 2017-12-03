@@ -1,4 +1,3 @@
-import facebook
 import sys
 from pagecrawler import PageCrawler
 
@@ -8,4 +7,4 @@ if len(sys.argv) != 3:
 
 crawler = PageCrawler(sys.argv[1], sys.argv[2])
 
-print(crawler.get_latest_posts())
+print(crawler.get_latest_posts_with_reactions(count=2))
