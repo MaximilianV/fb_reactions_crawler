@@ -8,7 +8,7 @@ def parse_arguments():
     group = parser.add_mutually_exclusive_group(required=True)
     parser.add_argument('access_token', metavar='access_token', help='a facebook access token')
     parser.add_argument('-c, --count', dest='count', action='store', default=5, type=int, metavar='post_count', help='amount of posts to be fetched from each page')
-    group.add_argument('-f, --file', dest='file', type=open, help='a file with newline separated page ids')
+    group.add_argument('-f, --file', dest='file', type=open, help='a json file [{"id": xxxx, "name": "page_name"}]')
     group.add_argument('-i, --id', dest='page_id', help='a facebook page id')
     return parser.parse_args()
 
