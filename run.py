@@ -14,6 +14,8 @@ def parse_arguments():
 
 
 def crawl_page(access_token, page_id, count, output_name=None):
+    if not output_name:
+        output_name = str(page_id)
     crawler = PageCrawler(access_token, page_id)
     reactions = crawler.get_latest_posts_with_reactions(count)
     with open(output_name + '.json', 'w') as outfile:
