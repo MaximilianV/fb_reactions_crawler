@@ -1,4 +1,5 @@
 import facebook
+import time
 
 
 class PageCrawler:
@@ -18,12 +19,16 @@ class PageCrawler:
                                                                 'reactions.type(ANGRY).limit(0).summary(1).as(angry)')
         return PageCrawler.shorten_reactions_array(reactions)
 
-    def get_latest_posts_with_reactions(self, count=10):
+    def get_latest_posts_with_reactions(self, count=10, rate_limit_per_hour=200):
         posts = self.get_latest_posts(count)
+        chunked_posts = list(PageCrawler.chunks(posts["posts"]["data"], rate_limit_per_hour))
         enriched_posts = {}
-        for post in posts["posts"]["data"]:
-            enriched_posts[post["id"]] = {"message": post["message"],
+        for chunk in chunked_posts:
+            for post in chunk:
+                enriched_posts[post["id"]] = {"message": post["message"],
                                           "reactions": self.get_reaction_for_post(post["id"])}
+            # After crawling a chunk, wait until the next full hour
+            time.sleep(-time.time() % 3600)
         return enriched_posts
 
     @staticmethod
@@ -33,3 +38,9 @@ class PageCrawler:
         for reaction in reactions:
             compact_reactions[reaction] = reactions[reaction]["summary"]["total_count"]
         return compact_reactions
+
+    @staticmethod
+    def chunks(l, n):
+        """Yield successive n-sized chunks from l."""
+        for i in range(0, len(l), n):
+            yield l[i:i + n]
