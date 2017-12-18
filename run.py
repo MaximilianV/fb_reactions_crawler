@@ -1,6 +1,7 @@
 import argparse
 import json
 from pagecrawler import PageCrawler
+from facebook import Facebook
 
 
 def parse_arguments():
@@ -25,12 +26,14 @@ def crawl_page(access_token, page_id, count, limit, output_name=None):
 
 def main(run_args):
     access_token = run_args.access_token
-    if run_args.file:
+    """if run_args.file:
         pages_config = json.load(run_args.file)
         for page in pages_config:
             crawl_page(access_token, page['id'], run_args.count, run_args.limit, output_name=page['name'])
     else:
-        crawl_page(access_token, run_args.page_id, run_args.count, run_args.limit)
+        crawl_page(access_token, run_args.page_id, run_args.count, run_args.limit)"""
+    fb = Facebook(access_token)
+    fb.get_posts(289955244416, 55)
 
 
 if __name__ == "__main__":
