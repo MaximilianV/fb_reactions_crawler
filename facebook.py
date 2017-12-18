@@ -1,5 +1,7 @@
 import requests
 from facebookresponse import FacebookResponse
+import time
+import random
 
 
 class Facebook:
@@ -18,7 +20,7 @@ class Facebook:
                           + 'reactions.type(SAD).limit(0).summary(1).as(sad),'\
                           + 'reactions.type(ANGRY).limit(0).summary(1).as(angry)'
 
-    GET_LIMIT_MAX = 10
+    GET_LIMIT_MAX = 100
 
     def __init__(self, access_token):
         self.access_token = access_token
@@ -37,8 +39,8 @@ class Facebook:
         args.update(self.default_args)
 
         # print(args)
-        print("Requesting: " + url + " with limit " + str(limit) + "\n")
-
+        # print("Requesting: " + url + " with limit " + str(limit) + "\n")
+        time.sleep(random.randint(1,5))
         r = self.session.get(url, params=args)
         # Throw exception in case of error
         r.raise_for_status()
@@ -71,7 +73,7 @@ class Facebook:
         retrieved = 0
         count = len(post_ids)
         reaction_data = {}
-        chunked_post_ids = list(Facebook.chunks(post_ids, Facebook.GET_LIMIT_MAX))
+        chunked_post_ids = list(Facebook.chunks(post_ids, 25))
         for id_chunk in chunked_post_ids:
             url = Facebook.get_multipleids_url(id_chunk)
             result = self.place_request(url, len(id_chunk), Facebook.GET_REACTION_FIELDS)
