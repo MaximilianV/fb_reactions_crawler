@@ -18,29 +18,15 @@ Imagine you want to train your Model with facebook posts from CNN. This is the s
 1. Find the id of the page you want to crawl. The fastest way to retrieve a page id is https://findmyfbid.com/. (e.G. For CNN it is 5550296508.)
 1. Get yourself a facebook graph API access token using the graph API explorer https://developers.facebook.com/tools/explorer/.
 1. Use the crawling script.
-```
-python3 crawl.py -i 5550296508 YOUR_FB_ACCESS_TOKEN
-```
-
+    - ```python3 crawl.py -i 5550296508 YOUR_FB_ACCESS_TOKEN```
 1. Filter the crawled data using the filter script.
-```
-python3 filter.py cnn.json
-```
-
+    - ```python3 filter.py cnn.json```
 1. Normalize the filtered data using the normalize script.
-```
-python3 normalize.py cnn_filtered.json
-```
-
+    - ```python3 normalize.py cnn_filtered.json```
 1. Train the model using the train script.
-```
-python3 train.py cnn_filtered_normalized.json
-```
-
+    - ```python3 train.py cnn_filtered_normalized.json```
 1. Question the trained model using the requestmodel script.
-```
-python3 requestmodel.py "Your newest FB post!"
-```
+    - ```python3 requestmodel.py "Your newest FB post!"```
 
 ## 2. Documentation
 
