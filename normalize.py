@@ -16,10 +16,10 @@ def normalize(post):
     reaction = get_most_common_reaction(post['reactions'])
     message = word_tokenize(post['message'])
     message_without_stopwords = []
-    for word in post['message']:
+    for word in message:
         if word not in stopwords.words('english'):
             message_without_stopwords.append(word)
-    return {'message': post['message'], 'reaction': reaction}
+    return {'message': message_without_stopwords, 'reaction': reaction}
 
 def main(run_args):
     filename = run_args.filename
