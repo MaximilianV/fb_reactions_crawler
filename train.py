@@ -31,18 +31,23 @@ def main(run_args):
 
     logging.debug("Converting posts to corpus array.")
     corpus = map(lambda post: post['message'], posts)
+    reactions = list(map(lambda post: post['reaction'], posts))
 
     logging.debug("Extracting BoW vectors.")
     vectorizer = CountVectorizer()
     features = vectorizer.fit_transform(corpus)
 
-    logging.debug("Persisting vectorizer for later use.")
+    logging.debug("Persisting vectorizer.")
     joblib.dump(vectorizer, "data/vectorizer.pkl")
 
     logging.debug("Training model.")
     clf = svm.SVC()
-    clf.fit(features, corpus)
+    clf.fit(features, reactions)
 
+    logging.debug("Persisting model.")
+    joblib.dump(clf, "data/model.pkl")
+
+    logging.debug("Finished.")
     # print(clf.predict([[-1., -1.]]))
 
 
