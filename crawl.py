@@ -1,7 +1,6 @@
 import argparse
 import json
-from pagecrawler import PageCrawler
-from facebook import Facebook
+from pagecrawler.pagecrawler import PageCrawler
 
 
 def parse_arguments():
@@ -16,10 +15,10 @@ def parse_arguments():
 
 
 def crawl_page(access_token, page_id, count, limit, output_name=None):
-    if not output_name:
-        output_name = str(page_id)
     crawler = PageCrawler(access_token, page_id)
     reactions = crawler.get_latest_posts_with_reactions(count, limit)
+    if not output_name:
+        output_name = str(page_id)
     with open(output_name, 'w') as outfile:
         json.dump(reactions, outfile)
 

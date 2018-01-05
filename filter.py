@@ -3,6 +3,7 @@ import json
 import re
 from functools import reduce
 
+
 eleminations = {
     'url': 0,
     'min_char_count': 0,
@@ -10,12 +11,13 @@ eleminations = {
     'top_reaction_gap': 0,
 }
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Filter crawled facebook reactions.')
-    parser.add_argument('-u, --filter-urls', dest='filter_urls', action='store', default=True, type=bool, metavar='filter_urls', help='Filter posts if they are URLs.')
-    parser.add_argument('-c, --min-char', dest='min_char_count', action='store', default=20, type=int, metavar='min_char_count', help='Filter posts by minimal character count.')
-    parser.add_argument('-r, --min-reactions', dest='min_reaction_count', action='store', default=100, type=int, metavar='min_reaction_count', help='Filter posts by minimal reaction count.')
-    parser.add_argument('-g, --reaction-gap', dest='top_reaction_gap', action='store', default=10, type=int, metavar='top_reaction_gap', help='Filter posts where the dominant isnt X percent higher then the secondary reaction.')
+    parser.add_argument('-u, --filter-urls', dest='filter_urls', action='store', default=True, type=bool, metavar='filter_urls', help='whether to filter URLs')
+    parser.add_argument('-c, --min-char', dest='min_char_count', action='store', default=20, type=int, metavar='min_char', help='a minimal character count')
+    parser.add_argument('-r, --min-reactions', dest='min_reaction_count', action='store', default=100, type=int, metavar='min_reactions', help='a minimal reaction count')
+    parser.add_argument('-g, --reaction-gap', dest='top_reaction_gap', action='store', default=10, type=int, metavar='reaction_gap', help='a percentage value the dominant reaction has to be above the secondary reaction')
     parser.add_argument('filename', metavar='filename', help='a crawled json file')
     return parser.parse_args()
 
