@@ -2,6 +2,7 @@ import argparse
 import json
 from sklearn import svm
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.externals import joblib
 
 
 def parse_arguments():
@@ -21,6 +22,7 @@ def main(run_args):
     vectorizer = CountVectorizer()
     features = vectorizer.fit_transform(corpus)
     print(features)
+    joblib.dump(vectorizer, "data/vectorizer.pkl")
     clf = svm.SVC()
     clf.fit(features, corpus)
 
