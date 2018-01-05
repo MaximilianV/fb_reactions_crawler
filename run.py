@@ -1,7 +1,6 @@
 import argparse
 import json
-from pagecrawler import PageCrawler
-from facebook import Facebook
+from pagecrawler.pagecrawler import PageCrawler
 
 
 def parse_arguments():

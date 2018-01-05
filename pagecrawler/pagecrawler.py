@@ -1,4 +1,4 @@
-from facebook import Facebook
+from pagecrawler.facebook import Facebook
 import time
 
 

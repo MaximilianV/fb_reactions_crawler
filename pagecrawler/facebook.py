@@ -1,5 +1,5 @@
 import requests
-from facebookresponse import FacebookResponse
+from pagecrawler.facebookresponse import FacebookResponse
 import time
 import random
 
