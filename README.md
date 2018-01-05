@@ -1,4 +1,4 @@
-# fb_reactions_crawler
+# Facebook Reactions Crawler
 *A crawler for facebook posts and their reactions on public facebook pages.*
 
 ### 0. Installation
@@ -13,7 +13,7 @@ The documentation for `facebook-sdk` can be found [here](http://facebook-sdk.rea
 #### b. Installing
 Clone this repository.
 
-### 1. Usage
+### 1. Facebook Reactions Crawler - Usage
 The usage of the main script `run.py` is as follows:
 
     usage: run.py [-h] [-c, --count post_count]
@@ -47,7 +47,35 @@ If you choose to provide a file, e.g. for crawling multiple pages at once, use t
 
 The output is written to a file for each provided page individually.
 
-### 2. FAQ
+### 2. Post Entropy Filter - Usage
+
+The usage of the main script `postfilter.py` is as follows:
+```
+    usage: postfilter.py [-h] [-u, --filter-urls filter_urls]
+                         [-c, --min-char min_char_count]
+                         [-r, --min-reactions min_reaction_count]
+                         [-g, --reaction-gap top_reaction_min_gap]
+                         filename
+
+    Filter crawled facebook reactions.
+
+    positional arguments:
+      filename              a crawled json file
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -u, --filter-urls filter_urls
+                            Filter posts if they are URLs.
+      -c, --min-char min_char_count
+                            Filter posts by minimal character count.
+      -r, --min-reactions min_reaction_count
+                            Filter posts by minimal reaction count.
+      -g, --reaction-gap top_reaction_min_gap
+                            Filter posts where the dominant isnt X percent higher
+                            then the secondary reaction.
+```
+
+### 3. FAQ
 
 *How do I get a Facebook access token?*
 > Go to the [Graph API Explorer](https://developers.facebook.com/tools/explorer/) and request an access token with your Facebook user on the top right corner.
