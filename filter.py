@@ -3,12 +3,14 @@ import json
 import re
 from functools import reduce
 
+
 eleminations = {
     'url': 0,
     'min_char_count': 0,
     'min_reaction_count': 0,
     'top_reaction_gap': 0,
 }
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Filter crawled facebook reactions.')
