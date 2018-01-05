@@ -6,6 +6,7 @@ from nltk.corpus import stopwords
 from nltk.tokenize.moses import MosesDetokenizer
 
 
+
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Normalize filtered facebook reactions.')
     parser.add_argument('filename', metavar='filename', help='a filtered json file')
@@ -14,6 +15,7 @@ def parse_arguments():
 
 def get_most_common_reaction(reactions):
     return max(reactions.items(), key=operator.itemgetter(1))[0]
+
 
 
 def normalize(post):
@@ -27,6 +29,7 @@ def normalize(post):
     message_without_stopwords = detokenizer.detokenize(words_without_stopwords, return_str=True)
 
     return {'message': message_without_stopwords, 'reaction': reaction}
+
 
 
 def main(run_args):
