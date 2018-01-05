@@ -31,7 +31,7 @@ def main(run_args):
         document = input("Which sentence should be estimated?\n")
         feature = vectorizer.transform([document])
         print(clf.predict(feature))
-        print("\n\n")
+        print("\n")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ def main(run_args):
         ])
 
     filename = run_args.filename
-    
+
     posts = None
     logging.debug("Loading posts from " + filename)
     with open(filename, 'r') as infile:
