@@ -72,6 +72,7 @@ def main(run_args):
     print('Posts filtered by minimal reaction count: ' + str(eleminations['min_reaction_count']))
     print('Posts filtered by top reaction gap: ' + str(eleminations['top_reaction_gap']))
     print('Total posts after filter: ' + str(len(clean_posts)))
+    filename = filename.strip('.json')
     with open(filename + '_filtered.json', 'w') as outfile:
         json.dump(clean_posts, outfile)
 

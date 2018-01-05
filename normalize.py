@@ -32,7 +32,7 @@ def main(run_args):
         posts = json.load(infile)
 
     normalized_posts = list(map(normalize, posts))
-    
+    filename = filename.strip('.json')
     with open(filename + '_normalized.json', 'w') as outfile:
         json.dump(normalized_posts, outfile)
 
