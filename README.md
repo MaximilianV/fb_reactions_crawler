@@ -6,12 +6,11 @@
 Virtualenv can be used to simply the process.
 
     python3
-    facebook-sdk (requires requests)
 
-The documentation for `facebook-sdk` can be found [here](http://facebook-sdk.readthedocs.io/en/latest/index.html).
+#### b. Setup
 
-#### b. Installing
-Clone this repository.
+    1. Clone the repository
+    1. Run `python3 stup.py`
 
 ### 1. Facebook Reactions Crawler - Usage
 The usage of the main script `run.py` is as follows:
