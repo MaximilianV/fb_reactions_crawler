@@ -17,7 +17,7 @@ def normalize(post):
 def main(run_args):
     filename = run_args.filename
     posts = None
-    with open(filename + '.json', 'r') as infile:
+    with open(filename, 'r') as infile:
         posts = json.load(infile)
     normalized_posts = map(normalize, posts)
     with open(filename + '_normalized.json', 'w') as outfile:

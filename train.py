@@ -12,7 +12,7 @@ def main(run_args):
     filename = run_args.filename
     
     posts = None
-    with open(filename + '.json', 'r') as infile:
+    with open(filename, 'r') as infile:
         posts = json.load(infile)
     
     corpus = map(lambda post: post['message'], posts)

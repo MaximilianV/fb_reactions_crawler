@@ -63,7 +63,7 @@ def clean_post_data(posts, filter_urls, min_char_count, min_reaction_count, top_
 def main(run_args):
     filename = run_args.filename
     posts = None
-    with open(filename + '.json', 'r') as infile:
+    with open(filename, 'r') as infile:
         posts = json.load(infile)
     print('Total posts before filter: ' + str(len(posts)))
     clean_posts = clean_post_data(posts, run_args.filter_urls, run_args.min_char_count, run_args.min_reaction_count, run_args.top_reaction_gap)
