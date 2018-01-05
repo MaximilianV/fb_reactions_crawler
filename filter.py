@@ -45,7 +45,7 @@ def post_is_useful(post, filter_urls, min_char_count, min_reaction_count, top_re
     # Filter posts where the highest reaction is not dominant. 
     # Default: 10% higher then the secondary reaction.
     # TODO: make percentage a command line argument
-    reaction_counts = post['reactions'].values()
+    reaction_counts = list(post['reactions'].values())
     highgest_reaction = max(reaction_counts)
     reaction_counts.remove(highgest_reaction)
     second_highgest_reaction = max(reaction_counts)
