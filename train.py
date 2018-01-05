@@ -5,11 +5,17 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.externals import joblib
 import logging
 
+reactions = {"love": 0, "haha": 1, "wow": 2, "sad": 3, "angry": 4}
+
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Train model based on normalized facebook reactions.')
     parser.add_argument('filename', metavar='filename', help='a normalized json file')
     return parser.parse_args()
+
+
+def translate_reaction(reaction):
+    return reactions[reaction]
 
 
 def main(run_args):
@@ -31,7 +37,10 @@ def main(run_args):
 
     logging.debug("Converting posts to corpus array.")
     corpus = map(lambda post: post['message'], posts)
-    reactions = list(map(lambda post: post['reaction'], posts))
+    reactions = list(map(lambda post: translate_reaction(post['reaction']), posts))
+
+    print(reactions)
+    exit()
 
     logging.debug("Extracting BoW vectors.")
     vectorizer = CountVectorizer()
