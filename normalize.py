@@ -7,7 +7,7 @@ from nltk.tokenize.moses import MosesDetokenizer
 
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Normalize filtered facebook reactions.')
+    parser = argparse.ArgumentParser(description='Normalize crawled and filtered facebook reactions.')
     parser.add_argument('filename', metavar='filename', help='a filtered json file')
     return parser.parse_args()
 
