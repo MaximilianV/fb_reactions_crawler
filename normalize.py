@@ -3,6 +3,7 @@ import operator
 import json
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
+from nltk.tokenize.moses import MosesDetokenizer
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Normalize filtered facebook reactions.')
@@ -15,10 +16,13 @@ def get_most_common_reaction(reactions):
 def normalize(post):
     reaction = get_most_common_reaction(post['reactions'])
     message = word_tokenize(post['message'])
-    message_without_stopwords = []
-    for word in message:
-        if word not in stopwords.words('english'):
-            message_without_stopwords.append(word)
+    sw = stopwords.words('english')
+
+    words_without_stopwords = [word for word in message if word not in sw]
+
+    detokenizer = MosesDetokenizer()
+    message_without_stopwords = detokenizer.detokenize(words_without_stopwords, return_str=True)
+
     return {'message': message_without_stopwords, 'reaction': reaction}
 
 def main(run_args):
@@ -26,7 +30,9 @@ def main(run_args):
     posts = None
     with open(filename, 'r') as infile:
         posts = json.load(infile)
+
     normalized_posts = list(map(normalize, posts))
+    
     with open(filename + '_normalized.json', 'w') as outfile:
         json.dump(normalized_posts, outfile)
 
