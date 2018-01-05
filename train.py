@@ -39,9 +39,6 @@ def main(run_args):
     corpus = map(lambda post: post['message'], posts)
     reactions = list(map(lambda post: translate_reaction(post['reaction']), posts))
 
-    print(reactions)
-    exit()
-
     logging.debug("Extracting BoW vectors.")
     vectorizer = CountVectorizer()
     features = vectorizer.fit_transform(corpus)
