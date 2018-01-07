@@ -1,7 +1,7 @@
 import argparse
 import json
 from sklearn import svm
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.externals import joblib
 import logging
 
@@ -40,7 +40,7 @@ def main(run_args):
     reactions = list(map(lambda post: translate_reaction(post['reaction']), posts))
 
     logging.debug("Extracting BoW vectors.")
-    vectorizer = CountVectorizer()
+    vectorizer = TfidfVectorizer()
     features = vectorizer.fit_transform(corpus)
 
     logging.debug("Persisting vectorizer.")
