@@ -1,7 +1,4 @@
 import argparse
-import json
-from sklearn import svm
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.externals import joblib
 import logging
 
