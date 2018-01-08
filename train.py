@@ -1,11 +1,7 @@
 import argparse
-import json
-from sklearn import svm
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.externals import joblib
-import logging
-
-reactions = {"love": 0, "haha": 1, "wow": 2, "sad": 3, "angry": 4}
+from training.svm_model import SvmModel
+from training.naivebayes_model import NaiveBayesModel
+from training.feature.features import Features
 
 
 def parse_arguments():
@@ -14,47 +10,22 @@ def parse_arguments():
     return parser.parse_args()
 
 
-def translate_reaction(reaction):
-    return reactions[reaction]
-
-
 def main(run_args):
-    #Setup logger
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format="%(asctime)s [%(levelname)-5.5s]  %(message)s",
-        handlers=[
-            logging.FileHandler("{0}/{1}.log".format("logs", "training")),
-            logging.StreamHandler()
-        ])
+    # Train a SVM model with tfidf feature
+    # model = SvmModel()
 
-    filename = run_args.filename
+    # Train a Naive Bayes model with tfidf feature
+    # See: http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
+    model = NaiveBayesModel()
 
-    posts = None
-    logging.debug("Loading posts from " + filename)
-    with open(filename, 'r') as infile:
-        posts = json.load(infile)
+    model.select_features([Features.Tfidf])
+    model.train_from_file(run_args.filename)
+    model.persist()
 
-    logging.debug("Converting posts to corpus array.")
-    corpus = map(lambda post: post['message'], posts)
-    reactions = list(map(lambda post: translate_reaction(post['reaction']), posts))
-
-    logging.debug("Extracting BoW vectors.")
-    vectorizer = CountVectorizer()
-    features = vectorizer.fit_transform(corpus)
-
-    logging.debug("Persisting vectorizer.")
-    joblib.dump(vectorizer, "data/vectorizer.pkl")
-
-    logging.debug("Training model.")
-    clf = svm.SVC()
-    clf.fit(features, reactions)
-
-    logging.debug("Persisting model.")
-    joblib.dump(clf, "data/model.pkl")
-
-    logging.debug("Finished.")
-    # print(clf.predict([[-1., -1.]]))
+    while True:
+        doc = input("What do you want me to analyse?\n")
+        classification = model.predict(doc)
+        print(str(classification) + " = " + model.translate_reaction_id(classification[0]))
 
 
 if __name__ == "__main__":
