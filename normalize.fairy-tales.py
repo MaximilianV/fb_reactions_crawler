@@ -1,4 +1,5 @@
 import argparse
+import os
 import operator
 import json
 import re
@@ -6,7 +7,9 @@ import re
 
 def parse_arguments():
     parser = argparse.ArgumentParser(description='Normalize the affective text dataset.')
-    parser.add_argument('emmoodfile', metavar='textfile', help='a emmood file containing emotions and text')
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-f, --file', dest='file', help='a emmood file containing emotions and text')
+    group.add_argument('-d, --directory', dest='directory', help='a directory containing emmood files')
     return parser.parse_args()
 
 
@@ -45,17 +48,25 @@ def normalize(textline):
 
 
 def main(run_args):
-    textfile = run_args.emmoodfile
+    files = []
+    if run_args.directory:
+        for textfile in os.listdir(run_args.directory):
+            if textfile.endswith(".emmood"):
+                files.append(os.path.join(run_args.directory, textfile))
+    else:
+        files = [run_args.file]
+    
     textlines = []
-    with open(textfile, 'r') as infile:
-        for line in infile:
-            textlines.append(line)
+    for textfile in files:
+        with open(textfile, 'r') as infile:
+            for line in infile:
+                textlines.append(line)
 
     normalized_posts = list(map(normalize, textlines))
-    #filtered_posts = list(filter(lambda post: post['reaction'] != None, normalized_posts))
+    filtered_posts = list(filter(lambda post: post['reaction'] != None, normalized_posts))
 
     with open(textfile + '_normalized.json', 'w') as outfile:
-        json.dump(normalized_posts, outfile)
+        json.dump(filtered_posts, outfile)
 
 
 if __name__ == "__main__":
