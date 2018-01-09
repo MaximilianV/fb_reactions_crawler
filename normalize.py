@@ -13,7 +13,19 @@ def parse_arguments():
 
 
 def get_most_common_reaction(reactions):
-    return max(reactions.items(), key=operator.itemgetter(1))[0]
+    reaction = max(reactions.items(), key=operator.itemgetter(1))[0]
+    if reaction == 'angry':
+        return 'anger'
+    elif reaction == 'haha':
+        return 'joy'
+    elif reaction == 'love':
+        return 'joy'
+    elif reaction == 'sad':
+        return 'sadness'
+    elif reaction == 'wow':
+        return 'surprise'
+    print('wrong')
+    return None
 
 
 
