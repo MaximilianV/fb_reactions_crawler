@@ -9,7 +9,7 @@ import seaborn as sns
 def get_main_reaction(reactions):
 	temp = dict(reactions)
 	temp.pop('like', None)
-	return max(temp.iteritems(), key=lambda x:x[1])
+	return max(temp.items(), key=lambda x:x[1])
 
 def get_percent_reaction(reactions, reaction):
 	total = reactions['love'] + reactions['haha'] + reactions['wow'] + reactions['sad'] + reactions['angry'] + reactions['like']
@@ -34,7 +34,7 @@ for i in range(0,len(labels)):
 		X = []
 		Y = []
 		 
-		for id, post in data.iteritems():
+		for id, post in data.items():
 			X.append(post['reactions'][labels[i]])
 			Y.append(post['reactions'][labels[j]])
 			
@@ -52,7 +52,7 @@ for i in range(0,len(labels)):
 		# Diagonal
 		if j == i:	
 			X_temp = []
-			for id, post in data.iteritems():
+			for id, post in data.items():
 				X_temp.append(get_percent_reaction(post['reactions'],labels[i]))
 			sns.distplot(X_temp);
 			#plt.plot(X_temp,'-')

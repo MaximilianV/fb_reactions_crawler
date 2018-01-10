@@ -8,7 +8,7 @@ import numpy as np
 def get_main_reaction(reactions):
 	temp = dict(reactions)
 	temp.pop('like', None)
-	return max(temp.iteritems(), key=lambda x:x[1])
+	return max(temp.items(), key=lambda x:x[1])
 
 def get_percent_reaction(reactions, reaction):
 	total = reactions['love'] + reactions['haha'] + reactions['wow'] + reactions['sad'] + reactions['angry'] + reactions['like']
@@ -26,7 +26,7 @@ labels = ['love','haha','wow','sad','angry']
 
 counter = Counter()
 
-for id, post in data.iteritems():
+for id, post in data.items():
 	key, value = get_main_reaction(post['reactions'])
 	x.append(get_percent_reaction(post['reactions'],key))
 	#y.append(labels.index(key)+random.uniform(-0.2, 0.2))
@@ -34,9 +34,9 @@ for id, post in data.iteritems():
 	counter.update([key])
 
 wordcloud = WordCloud()
-total_tweets = sum(counter.itervalues())
+total_tweets = sum(counter.values())
 dict_counter = dict(counter)
-for lab, val in dict_counter.iteritems():
+for lab, val in dict_counter.items():
 	if lab in labels:
 		temp_lab = lab
 		lab = lab + "("+ str(val*100/total_tweets) + "%)"
