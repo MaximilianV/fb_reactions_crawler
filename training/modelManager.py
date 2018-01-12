@@ -37,7 +37,7 @@ class ModelManager:
             feature.persist(self.base_path + str(model_id) + "." + str(feature_count) + ".feature")
             feature_count += 1
 
-        with open(str(model_id) + '.model.json', 'w') as outfile:
+        with open(self.base_path + str(model_id) + '.model.json', 'w') as outfile:
             json.dump(model_config, outfile)
 
     @staticmethod
