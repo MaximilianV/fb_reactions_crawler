@@ -14,16 +14,15 @@ class ModelManager:
 
     def save(self, model):
         model_config = dict()
-        model_config["name"] = model.get_name()
         model_config["base_path"] = self.base_path
+        model_config["model_type"] = model.__class__.__name__
         hasher = hashlib.md5()
-        hasher.update(model_config["name"].encode('utf-8'))
+        hasher.update(model_config["model_type"].encode('utf-8'))
         hasher.update(str(time.time()).encode('utf-8'))
         model_id = hasher.hexdigest()
         model_config["id"] = model_id
 
         # Save model
-        model_config["model_type"] = model.__class__.__name__
         model.persist(self.base_path + str(model_id) + ".model")
 
         # Save features
