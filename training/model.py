@@ -5,8 +5,8 @@ from sklearn.externals import joblib
 
 class Model:
 
-    reactions = {"love": 0, "haha": 1, "wow": 2, "sad": 3, "angry": 4}
-    reaction_ids = {0: "love", 1: "haha", 2: "wow", 3: "sad", 4: "angry"}
+    reactions = {"joy": 0, "surprise": 1, "sadness": 2, "anger": 3}
+    reaction_ids = {0: "joy", 1: "surprise", 2: "sadness", 3: "anger"}
 
     def __init__(self, model_dump=None):
         self.features = []
