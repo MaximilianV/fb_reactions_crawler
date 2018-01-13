@@ -25,6 +25,9 @@ class Model:
 
     def create_feature_union(self):
         features = []
+        if not self.features:
+            self.logger.error("No features selected before training was started.")
+            exit()
         for feature in self.features:
             features.append((feature.name, feature.value()))
         self.feature_union = FeatureUnion(features)
