@@ -44,17 +44,6 @@ class Model:
     def train(self, features, classification):
         pass
 
-    """
-    def extract_features(self, corpus):
-        # TODO: Allow multiple features
-        features = None
-        for feature_class in self.features:
-            feature_object = feature_class.value()
-            features = feature_object.process_corpus(corpus)
-            self.feature_objects.append(feature_object)
-        return features
-    """
-
     def extract_features_from_document(self, document):
         self.ensure_is_set(self.feature_union, "A feature union needs to be created before predicting a document.")
         return self.feature_union.transform(document)
@@ -62,11 +51,13 @@ class Model:
     def persist(self, path):
         self.logger.debug("Persisting model.")
         joblib.dump(self.model, path + ".model")
+        self.logger.debug("Persisting features.")
         joblib.dump(self.feature_union, path + ".features")
 
     def load(self, model_dump):
         self.logger.debug("Loading model.")
         self.model = joblib.load(model_dump + ".model")
+        self.logger.debug("Loading features.")
         self.feature_union = joblib.load(model_dump + ".features")
 
     def predict(self, document):
