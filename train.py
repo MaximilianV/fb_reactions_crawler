@@ -1,7 +1,7 @@
 import argparse
 from training.models import Models
 from training.feature.features import Features
-from training.modelManager import ModelManager
+from training.model_manager import ModelManager
 
 
 def parse_arguments():

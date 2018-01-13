@@ -1,5 +1,5 @@
 import argparse
-from training.modelManager import ModelManager
+from training.model_manager import ModelManager
 
 
 def parse_arguments():

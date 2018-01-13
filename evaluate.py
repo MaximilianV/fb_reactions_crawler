@@ -1,5 +1,5 @@
 import argparse
-from training.modelManager import ModelManager
+from training.model_manager import ModelManager
 from sklearn.metrics import precision_recall_fscore_support
 import json
 
