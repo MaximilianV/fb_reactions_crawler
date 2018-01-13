@@ -13,7 +13,7 @@ def main(run_args):
 
     while True:
         doc = input("What do you want me to analyse?\n")
-        classification = model.predict(doc)
+        classification = model.predict([doc])
         print(str(classification) + " = " + model.translate_reaction_id(classification[0]))
 
 
