@@ -8,4 +8,4 @@ class TfidfFeature(Feature):
         return self.featureModel.fit_transform(corpus)
 
     def process_single(self, document):
-        return self.featureModel.transform([document])
+        return self.featureModel.transform(document)
