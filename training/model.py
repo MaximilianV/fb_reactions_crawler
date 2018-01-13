@@ -25,9 +25,7 @@ class Model:
 
     def create_feature_union(self):
         features = []
-        if not self.features:
-            self.logger.error("No features selected before training was started.")
-            exit()
+        self.ensure_is_set(self.features, "No features selected before training was started.")
         for feature in self.features:
             features.append((feature.name, feature.value()))
         self.feature_union = FeatureUnion(features)
@@ -58,6 +56,7 @@ class Model:
     """
 
     def extract_features_from_document(self, document):
+        self.ensure_is_set(self.feature_union, "A feature union needs to be created before predicting a document.")
         return self.feature_union.transform(document)
 
     def persist(self, path):
@@ -75,6 +74,14 @@ class Model:
 
     def classify(self, document_features):
         pass
+
+    def ensure_is_set(self, var, message=None):
+        if not var:
+            if message:
+                self.logger.error(message)
+            else:
+                self.logger.error("Some variable is not set!")
+            exit(1)
 
     @staticmethod
     def translate_reaction(reaction):
