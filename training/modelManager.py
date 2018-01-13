@@ -23,9 +23,13 @@ class ModelManager:
         model_config["id"] = model_id
 
         # Save model
-        model.persist(self.base_path + str(model_id) + ".model")
+        model.persist(self.base_path + str(model_id))
+
+        # Save Feature_Union
+
 
         # Save features
+        """
         model_config["features"] = []
         feature_count = 0
         for feature in model.feature_objects:
@@ -35,6 +39,7 @@ class ModelManager:
             model_config["features"].append(feature_config)
             feature.persist(self.base_path + str(model_id) + "." + str(feature_count) + ".feature")
             feature_count += 1
+        """
 
         with open(self.base_path + str(model_id) + '.model.json', 'w') as outfile:
             json.dump(model_config, outfile)
@@ -48,11 +53,13 @@ class ModelManager:
         base_path = model_config["base_path"]
 
         # Load model
-        model = Models[model_config["model_type"]].value(base_path + str(model_id) + ".model")
+        model = Models[model_config["model_type"]].value(base_path + str(model_id))
 
         # Load features
+        """
         for feature in model_config["features"]:
             feature_object = Features[feature["type"]].value(base_path + str(model_id) + "." + str(feature["id"]) + ".feature")
             model.feature_objects.append(feature_object)
+        """
 
         return model

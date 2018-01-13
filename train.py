@@ -18,7 +18,7 @@ def main(run_args):
     # See: http://scikit-learn.org/stable/tutorial/text_analytics/working_with_text_data.html
     model = Models.NaiveBayesModel.value()
 
-    model.select_features([Features.TfidfFeature])
+    model.select_features([Features.TfidfVectorizer])
     model.train_from_file(run_args.filename)
     model_manager = ModelManager()
     model_manager.save(model)
