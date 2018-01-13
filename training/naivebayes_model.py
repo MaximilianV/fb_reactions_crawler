@@ -8,8 +8,6 @@ class NaiveBayesModel(Model):
         logging.debug("Training SVM model...")
         self.model = MultinomialNB()
         self.model.fit(features, classification)
-        print(features)
-        print(classification)
         logging.debug("Finished training.")
 
     def classify(self, document_features):
