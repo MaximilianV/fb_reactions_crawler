@@ -50,11 +50,9 @@ class Model:
             features = feature_object.process_single(document)
         return features
 
-    def persist(self):
+    def persist(self, path):
         self.logger.debug("Persisting model.")
-        joblib.dump(self.model, "data/models/model.pkl")
-        for feature_object in self.feature_objects:
-            feature_object.persist()
+        joblib.dump(self.model, path)
 
     def load(self, model_dump):
         self.logger.debug("Loading model.")

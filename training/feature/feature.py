@@ -12,9 +12,9 @@ class Feature:
     def process_corpus(self, corpus):
         pass
 
-    def persist(self):
+    def persist(self, path):
         self.logger.debug("Persisting feature model.")
-        joblib.dump(self.featureModel, "data/models/vectorizer.pkl")
+        joblib.dump(self.featureModel, path)
 
     def process_single(self, document):
         pass
