@@ -19,7 +19,7 @@ def crawl_page(access_token, page_id, count, limit, output_name=None):
     reactions = crawler.get_latest_posts_with_reactions(count, limit)
     if not output_name:
         output_name = str(page_id)
-    with open(output_name, 'w') as outfile:
+    with open("data/datasets/" + output_name + ".json", 'w') as outfile:
         json.dump(reactions, outfile)
 
 

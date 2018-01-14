@@ -21,6 +21,7 @@ class Facebook:
                           + 'reactions.type(ANGRY).limit(0).summary(1).as(angry)'
 
     GET_LIMIT_MAX = 100
+    GET_LIMIT_PAGE_MAX = 1000
 
     def __init__(self, access_token):
         self.access_token = access_token
@@ -40,7 +41,7 @@ class Facebook:
 
         # print(args)
         # print("Requesting: " + url + " with limit " + str(limit) + "\n")
-        time.sleep(random.randint(1,5))
+        #time.sleep(random.randint(1,5))
         r = self.session.get(url, params=args)
         # Throw exception in case of error
         r.raise_for_status()
@@ -48,6 +49,27 @@ class Facebook:
         # Return FacebookResponse object
         return FacebookResponse(r.json())
 
+    def get_pages(self, count):
+        retrieved_pages = 0
+        pages_data = []
+        url = Facebook.get_base_url() + "/search?q=''&type=page&fields=id,name,category,fan_count"
+        limit = min(count, Facebook.GET_LIMIT_PAGE_MAX)
+        result = self.place_request(url, limit)
+        pages_data = result.data
+        retrieved_pages = result.count()
+
+        while retrieved_pages < count:
+            remaining_posts = count - retrieved_pages
+            limit = min(remaining_posts, Facebook.GET_LIMIT_PAGE_MAX)
+            print("= Collected " + str(retrieved_pages) + " pages from " + str(count) )
+            print("= " + str(remaining_posts) + " remaining. Preparing new request for " + str(limit) + " pages.")
+            result = self.place_request(result.get_url_for_next_page(), limit)
+            pages_data += result.data
+            retrieved_pages += result.count()
+
+        print("* Finished get_pages from Facebook *")
+        return pages_data
+	
     def get_posts(self, page_id, count):
         retrieved_posts = 0
         posts_data = []
@@ -60,13 +82,17 @@ class Facebook:
         while retrieved_posts < count:
             remaining_posts = count - retrieved_posts
             limit = min(remaining_posts, Facebook.GET_LIMIT_MAX)
-            print("Collected " + str(retrieved_posts) + " posts from " + str(count) + "\n")
-            print(str(remaining_posts) + " remaining. Preparing new request for " + str(limit) + " posts.\n")
-            result = self.place_request(result.get_url_for_next_page(), limit)
-            posts_data += result.data
-            retrieved_posts += result.count()
+            print("= Collected " + str(retrieved_posts) + " posts from " + str(count))
+            print("= " + str(remaining_posts) + " remaining. Preparing new request for " + str(limit) + " posts.")
+            url = result.get_url_for_next_page()
+            if url:
+                result = self.place_request(url, limit)
+                posts_data += result.data
+                retrieved_posts += result.count()
+            else:
+                break
 
-        print("Finished get_posts")
+        print("Finished get_posts from " + str(page_id))
         return posts_data
 
     def get_reactions_for_posts(self, post_ids):
@@ -82,20 +108,24 @@ class Facebook:
 
     # STATIC METHODS #
     @staticmethod
+    def get_base_url():
+        return Facebook.BASE_URL
+
+    @staticmethod
     def get_singleid_url(object_id):
-        return Facebook.BASE_URL + Facebook.SINGLE_ID.format(id=object_id)
+        return Facebook.get_base_url() + Facebook.SINGLE_ID.format(id=object_id)
 
     @staticmethod
     def get_multipleids_url(object_ids):
         list_of_ids = ','.join(map(str, object_ids))
-        return Facebook.BASE_URL + Facebook.MULTIPLE_IDS.format(ids=list_of_ids)
+        return Facebook.get_base_url() + Facebook.MULTIPLE_IDS.format(ids=list_of_ids)
 
     @staticmethod
     def chunks(long_list, chunk_size):
         """Yield successive n-sized chunks from l."""
         for i in range(0, len(long_list), chunk_size):
             yield long_list[i:i + chunk_size]
-
+		
     @staticmethod
     def transform_post_list_to_post_dict(posts):
         post_dict = {}
