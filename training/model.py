@@ -42,16 +42,30 @@ class Model:
         reactions = list(map(lambda post: Model.translate_reaction(post['reaction']), posts))
         self.set_model()
         pipeline = Pipeline([("features", self.feature_union), ("model", self.model)])
-        param_grid = {'features__TfidfVectorizer__max_df': (0.5, 0.75, 1.0),
-                      # 'features__TfidfVectorizer__max_features': (None, 5000, 10000, 50000),
+        """param_grid = {'features__TfidfVectorizer__max_df': (0.5, 0.75, 1.0),
+                      'features__TfidfVectorizer__max_features': (None, 5000, 10000, 50000),
                       'features__TfidfVectorizer__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
-                      'features__TfidfVectorizer__use_idf': (True, False),
+                      'features__TfidfVectorizer__use_idf': (True, False)}
                       # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
-                      'model__alpha': (0.00001, 0.000001)}
+                      # 'model__alpha': (0.00001, 0.000001)}
+
+        pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
+                            features__TfidfVectorizer__max_features=None,
+                            features__TfidfVectorizer__ngram_range=(1,2),
+                            features__TfidfVectorizer__use_idf = False)
+        """
+        pipeline.fit(corpus, reactions)
+        """
         grid_search = GridSearchCV(pipeline, param_grid, verbose=1, n_jobs=-1)
         grid_search.fit(list(corpus), reactions)
         print("BEST MODEL:")
         print(grid_search.best_estimator_)
+        print("Best score: %0.3f" % grid_search.best_score_)
+        print("Best parameters set:")
+        best_parameters = grid_search.best_estimator_.get_params()
+        for param_name in sorted(best_parameters.keys()):
+            print("\t%s: %r" % (param_name, best_parameters[param_name]))
+        """
 
     def set_model(self):
         pass
