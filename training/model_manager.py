@@ -19,7 +19,6 @@ class ModelManager:
         if descriptive_name:
             model_id = ModelManager.truncate_model_name(model.__class__.__name__)
             for feature in model.feature_union.transformer_list:
-                print(feature)
                 model_id += "_" + ModelManager.truncate_feature_name(feature[0])
             if name_appendix:
                 model_id += "__" + name_appendix
