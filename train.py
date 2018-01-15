@@ -2,6 +2,7 @@ import argparse
 from training.models import Models
 from training.feature.features import Features
 from training.model_manager import ModelManager
+from os import path
 
 
 def parse_arguments():
@@ -21,7 +22,9 @@ def main(run_args):
     model.select_features([Features.TfidfVectorizer])
     model.train_from_file(run_args.filename)
     model_manager = ModelManager()
-    model_manager.save(model)
+    training_file = path.splitext(path.basename(run_args.filename))[0]
+    model_name = model_manager.save(model, descriptive_name=True, name_appendix=training_file)
+    print("Saved model to " + model_name)
 
 
 if __name__ == "__main__":
