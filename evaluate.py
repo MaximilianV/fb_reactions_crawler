@@ -1,6 +1,7 @@
 import argparse
 from training.model_manager import ModelManager
-from sklearn.metrics import precision_recall_fscore_support
+from training.model import Model
+from sklearn import metrics
 import json
 
 
@@ -19,7 +20,7 @@ def main(run_args):
     reactions = list(map(lambda post: model.translate_reaction(post['reaction']), posts))
 
     predicted_reactions = model.predict(corpus)
-    print(precision_recall_fscore_support(reactions, predicted_reactions, average='weighted'))
+    print(metrics.classification_report(reactions, predicted_reactions, target_names=Model.reaction_labels))
 
 
 if __name__ == "__main__":
