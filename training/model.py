@@ -48,8 +48,9 @@ class Model:
                       'features__TfidfVectorizer__use_idf': (True, False),
                       # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
                       'model__alpha': (0.00001, 0.000001)}
-        grid_search = GridSearchCV(pipeline, param_grid, verbose=10, n_jobs=-1)
-        grid_search.fit(corpus, reactions)
+        grid_search = GridSearchCV(pipeline, param_grid, verbose=1, n_jobs=-1)
+        grid_search.fit(list(corpus), reactions)
+        print("BEST MODEL:")
         print(grid_search.best_estimator_)
 
     def set_model(self):
