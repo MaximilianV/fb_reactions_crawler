@@ -5,6 +5,7 @@ import gensim
 # Load Google's pre-trained Word2Vec model.
 model = gensim.models.Word2Vec.load_word2vec_format('', binary=True)
 
+# Inspired by http://nadbordrozd.github.io/blog/2016/05/20/text-classification-with-word2vec/
 
 class GoogleEmbeddingFeature:
     def __init__(self, word2vec):
