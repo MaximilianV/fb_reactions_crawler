@@ -20,6 +20,8 @@ def parse_arguments():
     parser.add_argument('-e, --erase', dest='erase', action='store', default=False, type=bool, metavar='erase', help='erase existing files')
     parser.add_argument('-f, --file', dest='file', type=open, help='a json file [{"id": xxxx, "name": "page_name"}]')
     parser.add_argument('-s, --skip', dest='skip', action='count', help='skip steps 0-4')
+    parser.add_argument('-v, --value', dest='value', action='store', default=0.5, type=float, metavar='value', help='how many difference between main and other reactions in %')
+    parser.add_argument('-nj, --nojoy', dest='nojoy', action='store', default=False, type=bool, metavar='nojoy', help='show or not joy reaction')
     return parser.parse_args()
 
 
@@ -138,34 +140,50 @@ def main(run_args):
 				max_key, max_value = max(page['reaction'].items(), key=lambda x:x[1])
 				final_max = { max_key : max_value }
 				for k,v in page['reaction'].items():
-					if v >= max_value/2:
+					if v >= max_value*(1-run_args.value):
 						final_max[k] = v
+						
+				# Print a test
 				if page['category'] == "Author":
 					print(final_max)
+					
 				reacts.append(final_max)
 				cats.append(page['category'])
 			
+	if run_args.nojoy:
+		i_to_delete = []
+		for i in range(0,len(cats)):
+			
+			if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy']:
+				i_to_delete.append(i)
+			
+		i_to_delete.sort(reverse=True)
+		for i in i_to_delete:
+			cats.pop(i)
+			reacts.pop(i)
 	
-	categories = build_category_vector(cats)
 	reactions = build_reaction_vector(reacts)
-	
+	categories = build_category_vector(cats)
+		
 	for i in range(0,len(cats)):
 		
 		# Create esthetical offset
-		if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy']:
+		if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy'] or run_args.nojoy:
 			offset = random.uniform(-0.3, 0.3)
 		else:
 			offset = 0
 		X.append(categories[cats[i]] + offset)
 		
-		if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy']:
+		if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy'] or run_args.nojoy:
 			offset = random.uniform(-0.2, 0.2)
 		else:
 			offset = 0
 		Y.append(reactions[convert_reaction_to_bitmask(reacts[i])] + offset)
-	
+		
 	plt.figure()
 	plt.plot(X,Y,'+')
+	plt.title('Reactions by categories\nPages with min.10000 fans')
+	plt.figtext(0.9,0.9, str(len(cats)) + 'datas', fontsize=9, ha='right')
 	bitmasks = []
 	for bitmask in list(reactions.keys()):
 		 bitmasks.append(convert_bitmask_to_react(bitmask))
