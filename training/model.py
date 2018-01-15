@@ -8,6 +8,7 @@ class Model:
 
     reactions = {"joy": 0, "surprise": 1, "sadness": 2, "anger": 3}
     reaction_ids = {0: "joy", 1: "surprise", 2: "sadness", 3: "anger"}
+    reaction_labels = ["joy", "surprise", "sadness", "anger"]
 
     def __init__(self, model_dump=None):
         self.features = []
@@ -29,7 +30,6 @@ class Model:
         for feature in self.features:
             features.append((feature.name, feature.value()))
         self.feature_union = FeatureUnion(features)
-        self.logger.debug("Created a FeatureUnion: \n" + str(self.feature_union))
 
     def train_from_file(self, file):
         self.create_feature_union()
