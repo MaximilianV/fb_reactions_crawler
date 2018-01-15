@@ -1,7 +1,8 @@
 import logging
 import json
 from sklearn.externals import joblib
-from sklearn.pipeline import FeatureUnion
+from sklearn.pipeline import FeatureUnion, Pipeline
+from sklearn.model_selection import GridSearchCV
 
 
 class Model:
@@ -39,9 +40,19 @@ class Model:
         self.logger.debug("Converting posts to corpus array.")
         corpus = map(lambda post: post['message'], posts)
         reactions = list(map(lambda post: Model.translate_reaction(post['reaction']), posts))
-        self.train(self.feature_union.fit_transform(corpus), reactions)
+        self.set_model()
+        pipeline = Pipeline([("features", self.feature_union), ("model", self.model)])
+        param_grid = {'features__TfidfVectorizer__max_df': (0.5, 0.75, 1.0),
+                      # 'features__TfidfVectorizer__max_features': (None, 5000, 10000, 50000),
+                      'features__TfidfVectorizer__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
+                      'features__TfidfVectorizer__use_idf': (True, False),
+                      # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
+                      'model__alpha': (0.00001, 0.000001)}
+        grid_search = GridSearchCV(pipeline, param_grid, verbose=10, n_jobs=-1)
+        grid_search.fit(corpus, reactions)
+        print(grid_search.best_estimator_)
 
-    def train(self, features, classification):
+    def set_model(self):
         pass
 
     def extract_features_from_document(self, document):

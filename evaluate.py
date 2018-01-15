@@ -2,6 +2,7 @@ import argparse
 from training.model_manager import ModelManager
 from training.model import Model
 from sklearn import metrics
+from collections import Counter
 import json
 
 
@@ -20,6 +21,9 @@ def main(run_args):
     reactions = list(map(lambda post: model.translate_reaction(post['reaction']), posts))
 
     predicted_reactions = model.predict(corpus)
+
+    print(Counter(predicted_reactions))
+
     print(metrics.classification_report(reactions, predicted_reactions, target_names=Model.reaction_labels))
 
 
