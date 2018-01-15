@@ -10,7 +10,6 @@ class ModelManager:
         self.base_path = base_path
         if not self.base_path.endswith("/"):
             self.base_path += "/"
-        print("Started new model manager.")
 
     def save(self, model, descriptive_name=True, name_appendix=None):
         model_config = dict()
