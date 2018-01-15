@@ -23,10 +23,12 @@ class Facebook:
     GET_LIMIT_MAX = 100
     GET_LIMIT_PAGE_MAX = 1000
 
-    def __init__(self, access_token):
+    def __init__(self, access_token, min_fan_count=10000):
         self.access_token = access_token
         self.session = requests.Session()
         self.default_args = {Facebook.GET_TOKEN_NAME: self.access_token}
+        self.min_fan_count = min_fan_count
+        self.retrieved_pages = 0
 
     def place_request(self, url, limit, additional_fields=None):
         # Set limit for request
@@ -49,23 +51,50 @@ class Facebook:
         # Return FacebookResponse object
         return FacebookResponse(r.json())
 
+	# Recursiv crawling
+    def get_pages_r(self, page_id, count, depth):
+        pages_data = []
+        if self.retrieved_pages < count and depth < 3:
+
+            remaining_pages = count - self.retrieved_pages
+            limit = min(remaining_pages, Facebook.GET_LIMIT_PAGE_MAX)
+            # Print text
+            print("= Collected " + str(self.retrieved_pages) + " / " + str(count) + "pages.")
+            print("= " + str(remaining_pages) + " remaining. Preparing new request for " + str(limit) + " pages.")
+			
+            url = Facebook.get_singleid_url(page_id) + "/likes?fields=id,name,category,fan_count"
+            result = self.place_request(url, limit)
+            pages_data = result.data
+            if pages_data:
+                self.retrieved_pages += result.count()
+                if result.count()>0:
+                      for page in pages_data:
+                          if page['fan_count'] < self.min_fan_count:
+                             pages_data.pop(pages_data.index(page))
+                             self.retrieved_pages -= 1
+                      if pages_data:
+                          for page in pages_data:
+                             temp = self.get_pages_r(page['id'], count, depth + 1)
+                             if temp:
+                                 pages_data.extend(temp)
+
+        return pages_data
+	
     def get_pages(self, count):
-        retrieved_pages = 0
+        self.retrieved_pages = 0
         pages_data = []
         url = Facebook.get_base_url() + "/search?q=''&type=page&fields=id,name,category,fan_count"
         limit = min(count, Facebook.GET_LIMIT_PAGE_MAX)
         result = self.place_request(url, limit)
         pages_data = result.data
-        retrieved_pages = result.count()
+        self.retrieved_pages = result.count()
+        for page in pages_data:
+            if page['fan_count'] < self.min_fan_count:
+                pages_data.pop(pages_data.index(page))
+                self.retrieved_pages -= 1
 
-        while retrieved_pages < count:
-            remaining_posts = count - retrieved_pages
-            limit = min(remaining_posts, Facebook.GET_LIMIT_PAGE_MAX)
-            print("= Collected " + str(retrieved_pages) + " pages from " + str(count) )
-            print("= " + str(remaining_posts) + " remaining. Preparing new request for " + str(limit) + " pages.")
-            result = self.place_request(result.get_url_for_next_page(), limit)
-            pages_data += result.data
-            retrieved_pages += result.count()
+        for page in pages_data:
+            pages_data.extend(self.get_pages_r(page['id'], count, 0))
 
         print("* Finished get_pages from Facebook *")
         return pages_data
@@ -77,6 +106,8 @@ class Facebook:
         limit = min(count, Facebook.GET_LIMIT_MAX)
         result = self.place_request(url, limit)
         posts_data = result.data
+        if not posts_data:
+            return []
         retrieved_posts = result.count()
 
         while retrieved_posts < count:

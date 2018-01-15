@@ -16,7 +16,7 @@ class FacebookResponse:
         if "like" in self.complete_response[first_key]:
             return self.extract_reaction_content()
 
-        raise Exception("Couldn't identify response content.")
+        return None
 
     def extract_reaction_content(self):
         reaction_response = {}

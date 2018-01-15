@@ -41,18 +41,19 @@ def normalize(post):
 
     return {'message': message_without_stopwords, 'reaction': reaction}
 
-
-
-def main(run_args):
-    filename = run_args.filename
+def normalize_data(filename):
     posts = None
     with open(filename, 'r') as infile:
         posts = json.load(infile)
 
     normalized_posts = list(map(normalize, posts))
-    filename = filename.strip('.json')
-    with open(filename + '_normalized.json', 'w') as outfile:
+    filename = filename.strip('.json') + '_normalized.json'
+    with open(filename, 'w') as outfile:
         json.dump(normalized_posts, outfile)
+    return filename
+
+def main(run_args):
+    normalize_data(run_args.filename)    
 
 
 if __name__ == "__main__":
