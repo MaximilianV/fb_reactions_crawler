@@ -52,9 +52,9 @@ class Facebook:
         return FacebookResponse(r.json())
 
 	# Recursiv crawling
-    def get_pages_r(self, page_id, count, depth):
+    def get_pages_r(self, page_id, count, depth, pages_data_to_test):
         pages_data = []
-        if self.retrieved_pages < count and depth < 3:
+        if self.retrieved_pages < count and depth < 8:
 
             remaining_pages = count - self.retrieved_pages
             limit = min(remaining_pages, Facebook.GET_LIMIT_PAGE_MAX)
@@ -73,8 +73,18 @@ class Facebook:
                              pages_data.pop(pages_data.index(page))
                              self.retrieved_pages -= 1
                       if pages_data:
+                          # Delete duplicates		
+                          i_to_delete = []			
+                          for i in range(0,len(pages_data)):
+                             if pages_data[i] in pages_data_to_test:
+                                 i_to_delete.append(i)
+                                 self.duplicates += 1
+                          i_to_delete.sort(reverse=True)
+                          for i in i_to_delete:
+                             pages_data.pop(i)
+						  # Continue recursivity
                           for page in pages_data:
-                             temp = self.get_pages_r(page['id'], count, depth + 1)
+                             temp = self.get_pages_r(page['id'], count, depth + 1, pages_data_to_test)
                              if temp:
                                  pages_data.extend(temp)
 
@@ -82,6 +92,7 @@ class Facebook:
 	
     def get_pages(self, count):
         self.retrieved_pages = 0
+        self.duplicates = 0
         pages_data = []
         url = Facebook.get_base_url() + "/search?q=''&type=page&fields=id,name,category,fan_count"
         limit = min(count, Facebook.GET_LIMIT_PAGE_MAX)
@@ -93,10 +104,21 @@ class Facebook:
                 pages_data.pop(pages_data.index(page))
                 self.retrieved_pages -= 1
 
+        temp = []
         for page in pages_data:
-            pages_data.extend(self.get_pages_r(page['id'], count, 0))
+            temp.extend(self.get_pages_r(page['id'], count, 0,  pages_data))
+            before = len(temp)
+            s = []
+            for i in temp:
+                if i not in s:
+                    s.append(i)
+            temp = s
+            self.duplicates += before - len(temp)
+            if self.retrieved_pages >= count:
+                break
 
-        print("* Finished get_pages from Facebook *")
+        print("* Finished get_pages from Facebook, "+ str(self.duplicates) +" duplicates erased.*")
+        pages_data.extend(temp)
         return pages_data
 	
     def get_posts(self, page_id, count):

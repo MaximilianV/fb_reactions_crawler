@@ -21,7 +21,7 @@ def parse_arguments():
     parser.add_argument('-f, --file', dest='file', type=open, help='a json file [{"id": xxxx, "name": "page_name"}]')
     parser.add_argument('-s, --skip', dest='skip', action='count', help='skip steps 0-4')
     parser.add_argument('-v, --value', dest='value', action='store', default=0.5, type=float, metavar='value', help='how many difference between main and other reactions in %')
-    parser.add_argument('-nj, --nojoy', dest='nojoy', action='store', default=False, type=bool, metavar='nojoy', help='show or not joy reaction')
+    parser.add_argument('-nj, --nojoy', dest='nojoy', action='count', help='show or not joy reaction')
     return parser.parse_args()
 
 
@@ -89,25 +89,25 @@ def main(run_args):
 			
 			print("\n# " + str(i) + ".1 Crawling page '"+page['name']+"'...")
 			filename = "data/datasets/" + page['id']
-			if not os.path.isfile(filename + ".json") or run_args.erase:
+			if not os.path.isfile(filename + ".json") or run_args.erase or os.path.getsize(filename + ".json") < 3:
 				crawl.crawl_page(access_token, page['id'], 200, run_args.limit, output_name=page['id'])
 			else:
 				print("Skipped (-e to not skip)")
 			
 			print("# " + str(i) + ".2 Filtering content of the page...")
-			if not os.path.isfile(filename + "_filtered.json") or run_args.erase:
+			if not os.path.isfile(filename + "_filtered.json") or run_args.erase or os.path.getsize(filename + "_filtered.json") < 3:
 				filter.filter_data(filename + ".json", False, 1, 1, 1)
 			else:
 				print("Skipped (-e to not skip)")
 			
 			print("# " + str(i) + ".3 Normalizing content of the page...")
-			if not os.path.isfile(filename + "_filtered_normalized.json") or run_args.erase:
+			if not os.path.isfile(filename + "_filtered_normalized.json") or run_args.erase or os.path.getsize(filename + "_filtered_normalized.json") < 3:
 				normalize.normalize_data(filename + "_filtered.json")
 			else:
 				print("Skipped (-e to not skip)")
 			
 			print("# " + str(i) + ".4 Counting main reactions of the page...")
-			if not os.path.isfile(filename + "_filtered_normalized_count.json") or run_args.erase:
+			if not os.path.isfile(filename + "_filtered_normalized_count.json") or run_args.erase or os.path.getsize(filename + "_filtered_normalized_count.json") < 3:
 				posts = None
 				with open(filename + "_filtered_normalized.json", 'r') as infile:
 					posts = json.load(infile)
@@ -164,7 +164,7 @@ def main(run_args):
 	
 	reactions = build_reaction_vector(reacts)
 	categories = build_category_vector(cats)
-		
+	print(categories)
 	for i in range(0,len(cats)):
 		
 		# Create esthetical offset
