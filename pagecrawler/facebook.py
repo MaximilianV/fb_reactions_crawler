@@ -46,7 +46,7 @@ class Facebook:
         #time.sleep(random.randint(1,5))
         r = self.session.get(url, params=args)
         # Throw exception in case of error
-        r.raise_for_status()
+        # r.raise_for_status()
 
         # Return FacebookResponse object
         return FacebookResponse(r.json())
