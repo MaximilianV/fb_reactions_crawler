@@ -1,11 +1,10 @@
 import numpy as np
-from training.feature.GoogleEmbeddingFeature import GoogleEmbeddingFeature
+import training.feature.google_embedding_feature as gef
 from sklearn.feature_extraction.text import TfidfVectorizer
 from collections import defaultdict
 
 
-class TfidfGoogleEmbeddingVectorizer(GoogleEmbeddingFeature):
-
+class TfidfGoogleEmbeddingVectorizer(gef.GoogleEmbeddingFeature):
     def fit(self, X, y):
         tfidf = TfidfVectorizer(analyzer=lambda x: x)
         tfidf.fit(X)
@@ -21,8 +20,8 @@ class TfidfGoogleEmbeddingVectorizer(GoogleEmbeddingFeature):
 
     def transform(self, X):
         return np.array([
-                np.mean([self.word2vec[w] * self.word2weight[w]
-                         for w in self.tokenize_doc(words) if w in self.word2vec] or
+                np.mean([gef.w2v_model[w] * self.word2weight[w]
+                         for w in self.tokenize_doc(words) if w in gef.w2v_model] or
                         [np.zeros(self.dim)], axis=0)
                 for words in X
             ])

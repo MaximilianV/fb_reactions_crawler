@@ -5,7 +5,7 @@ from .model import Model
 
 class NaiveBayesModel(Model):
     def set_model(self):
-        self.model = MultinomialNB()
+        self.model = MultinomialNB(alpha=1e-05)
 
     """
     def train(self, features, classification):
