@@ -1,14 +1,14 @@
 import numpy as np
-from training.feature.google_embedding_feature import GoogleEmbeddingFeature
+import training.feature.google_embedding_feature as gef
 
 
-class GoogleEmbeddingVectorizer(GoogleEmbeddingFeature):
+class GoogleEmbeddingVectorizer(gef.GoogleEmbeddingFeature):
     def fit(self, X, y):
         return self
 
     def transform(self, X):
         return np.array([
-            np.mean([self.word2vec[w] for w in self.tokenize_doc(words) if w in self.word2vec]
+            np.mean([gef.w2v_model[w] for w in self.tokenize_doc(words) if w in gef.w2v_model]
                     or [np.zeros(self.dim)], axis=0)
             for words in X
         ])
