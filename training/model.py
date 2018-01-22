@@ -28,8 +28,8 @@ class Model:
     def create_feature_union(self):
         features = []
         self.ensure_is_set(self.features, "No features selected before training was started.")
-        for feature in self.features:
-            features.append((feature.name, feature.value()))
+        for feature_class in self.features:
+            features.append((feature_class.name, feature_class.value()))
         self.feature_union = FeatureUnion(features)
 
     def train_from_file(self, file):
@@ -38,7 +38,7 @@ class Model:
         with open(file, 'r') as infile:
             posts = json.load(infile)
         self.logger.debug("Converting posts to corpus array.")
-        corpus = map(lambda post: post['message'], posts)
+        corpus = list(map(lambda post: post['message'], posts))
         reactions = list(map(lambda post: Model.translate_reaction(post['reaction']), posts))
         self.set_model()
         pipeline = Pipeline([("features", self.feature_union), ("model", self.model)])
