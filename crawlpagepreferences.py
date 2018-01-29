@@ -169,13 +169,13 @@ def main(run_args):
 		
 		# Create esthetical offset
 		if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy'] or run_args.nojoy:
-			offset = random.uniform(-0.3, 0.3)
+			offset = random.uniform(-0.1, 0.1)
 		else:
 			offset = 0
 		X.append(categories[cats[i]] + offset)
 		
 		if convert_reaction_to_bitmask(reacts[i]) == REACTIONS_BITMASK['joy'] or run_args.nojoy:
-			offset = random.uniform(-0.2, 0.2)
+			offset = random.uniform(-0.1, 0.1)
 		else:
 			offset = 0
 		Y.append(reactions[convert_reaction_to_bitmask(reacts[i])] + offset)
@@ -183,7 +183,7 @@ def main(run_args):
 	plt.figure()
 	plt.plot(X,Y,'+')
 	plt.title('Reactions by categories\nPages with min.10000 fans')
-	plt.figtext(0.9,0.9, str(len(cats)) + 'datas', fontsize=9, ha='right')
+	plt.figtext(0.9,0.9, str(len(categories)) + 'categories\n' + str(len(reacts)) + 'datas', fontsize=9, ha='right')
 	bitmasks = []
 	for bitmask in list(reactions.keys()):
 		 bitmasks.append(convert_bitmask_to_react(bitmask))
