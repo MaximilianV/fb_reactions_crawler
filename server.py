@@ -1,6 +1,5 @@
 import argparse
-from bson.json_util import dumps
-from flask import Flask, request, Response, current_app
+from flask import Flask, request, Response, current_app, json
 from training.model_manager import ModelManager
 
 
@@ -26,7 +25,7 @@ def ask():
     if post:    
         classification = model.predict([post])
         reaction = model.translate_reaction_id(classification[0])
-        return Response(response=dumps(reaction), status=200, mimetype='application/json')
+        return Response(response=json.dumps(reaction), status=200, mimetype='application/json')
     else:
         return Response(response="Query parameter 'post' is missing.", status=400, mimetype='text/plain')
 
