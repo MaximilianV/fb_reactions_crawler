@@ -32,6 +32,26 @@ class Model:
             features.append((feature_class.name, feature_class.value()))
         self.feature_union = FeatureUnion(features)
 
+    def train_from_array(self, x, y):
+        self.create_feature_union()
+        corpus = x
+        reactions = y
+        self.set_model()
+        pipeline = Pipeline([("features", self.feature_union), ("model", self.model)])
+        """param_grid = {'features__TfidfVectorizer__max_df': (0.5, 0.75, 1.0),
+                      'features__TfidfVectorizer__max_features': (None, 5000, 10000, 50000),
+                      'features__TfidfVectorizer__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
+                      'features__TfidfVectorizer__use_idf': (True, False)}
+                      # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
+                      # 'model__alpha': (0.00001, 0.000001)}
+        """
+        pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
+                            features__TfidfVectorizer__max_features=None,
+                            features__TfidfVectorizer__ngram_range=(1,2),
+                            features__TfidfVectorizer__use_idf=False)
+
+        pipeline.fit(corpus, reactions)
+
     def train_from_file(self, file):
         self.create_feature_union()
         self.logger.debug("Loading posts from " + file)
@@ -48,13 +68,14 @@ class Model:
                       'features__TfidfVectorizer__use_idf': (True, False)}
                       # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
                       # 'model__alpha': (0.00001, 0.000001)}
-
+        """
         pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
                             features__TfidfVectorizer__max_features=None,
                             features__TfidfVectorizer__ngram_range=(1,2),
-                            features__TfidfVectorizer__use_idf = False)
-        """
+                            features__TfidfVectorizer__use_idf=False)
+
         pipeline.fit(corpus, reactions)
+
         """
         grid_search = GridSearchCV(pipeline, param_grid, verbose=1, n_jobs=-1)
         grid_search.fit(list(corpus), reactions)
