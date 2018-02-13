@@ -8,7 +8,7 @@ class GoogleEmbeddingVectorizer(gef.GoogleEmbeddingFeature):
 
     def transform(self, X):
         return np.array([
-            np.mean([1 + gef.w2v_model[word] for word in self.tokenize_doc(doc) if word in gef.w2v_model]
+            np.mean([10 + gef.w2v_model[word] for word in self.tokenize_doc(doc) if word in gef.w2v_model]
                     or [np.zeros(self.dim)], axis=0)
             for doc in X
         ])
