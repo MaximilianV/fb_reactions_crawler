@@ -6,6 +6,7 @@ from functools import reduce
 
 eleminations = {
     'nonmessage': 0,
+    'noreactions': 0,
     'url': 0,
     'min_char_count': 0,
     'min_reaction_count': 0,
@@ -28,6 +29,12 @@ def post_is_useful(post, filter_urls, min_char_count, min_reaction_count, top_re
         x = post["message"]
     except KeyError:
         eleminations['nonmessage'] += 1
+        return False
+    
+    try:
+        x = post["reactions"]
+    except KeyError:
+        eleminations['noreactions'] += 1
         return False
 
     if filter_urls: 
@@ -77,13 +84,14 @@ def main(run_args):
     print('Total posts before filter: ' + str(len(posts)))
     clean_posts = clean_post_data(posts, run_args.filter_urls, run_args.min_char_count, run_args.min_reaction_count, run_args.top_reaction_gap)
     print('Non-message posts filtered: ' + str(eleminations['nonmessage']))
+    print('No reactions posts filtered: ' + str(eleminations['noreactions']))
     print('Posts filtered because of url: ' + str(eleminations['url']))
     print('Posts filtered by minimal character count: ' + str(eleminations['min_char_count']))
     print('Posts filtered by minimal reaction count: ' + str(eleminations['min_reaction_count']))
     print('Posts filtered by top reaction gap: ' + str(eleminations['top_reaction_gap']))
     print('Total posts after filter: ' + str(len(clean_posts)))
     filename = filename.strip('.json')
-    with open(filename + '_filtered.json', 'w') as outfile:
+    with open('data/datasets/64k/joined_filtered.json', 'w') as outfile:
         json.dump(clean_posts, outfile)
 
 
