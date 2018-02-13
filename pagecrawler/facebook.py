@@ -62,7 +62,10 @@ class Facebook:
             limit = min(remaining_posts, Facebook.GET_LIMIT_MAX)
             print("Collected " + str(retrieved_posts) + " posts from " + str(count) + "\n")
             print(str(remaining_posts) + " remaining. Preparing new request for " + str(limit) + " posts.\n")
-            result = self.place_request(result.get_url_for_next_page(), limit)
+            next_page = result.get_url_for_next_page()
+            if next_page is None:
+                break
+            result = self.place_request(next_page, limit)
             posts_data += result.data
             retrieved_posts += result.count()
 
