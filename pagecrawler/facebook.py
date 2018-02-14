@@ -23,13 +23,15 @@ class Facebook:
     GET_LIMIT_MAX = 100
     GET_LIMIT_PAGE_MAX = 1000
 
-    def __init__(self, access_token, min_fan_count=10000):
+    def __init__(self, access_token, min_fan_count=10000, specific=[]):
         self.access_token = access_token
         self.session = requests.Session()
         self.default_args = {Facebook.GET_TOKEN_NAME: self.access_token}
         self.min_fan_count = min_fan_count
         self.retrieved_pages = 0
-
+        self.specific = specific
+		
+		
     def place_request(self, url, limit, additional_fields=None):
         # Set limit for request
         args = {Facebook.GET_LIMIT_NAME: str(limit)}
@@ -54,7 +56,7 @@ class Facebook:
 	# Recursiv crawling
     def get_pages_r(self, page_id, count, depth, pages_data_to_test):
         pages_data = []
-        if self.retrieved_pages < count and depth < 8:
+        if self.retrieved_pages < count and depth < 20:
 
             remaining_pages = count - self.retrieved_pages
             limit = min(remaining_pages, Facebook.GET_LIMIT_PAGE_MAX)
@@ -69,7 +71,8 @@ class Facebook:
                 self.retrieved_pages += result.count()
                 if result.count()>0:
                       for page in pages_data:
-                          if page['fan_count'] < self.min_fan_count:
+                          print(self.specific)
+                          if page['fan_count'] < self.min_fan_count or ( not self.specific or not  page['category'] in self.specific ):
                              pages_data.pop(pages_data.index(page))
                              self.retrieved_pages -= 1
                       if pages_data:
@@ -100,7 +103,7 @@ class Facebook:
         pages_data = result.data
         self.retrieved_pages = result.count()
         for page in pages_data:
-            if page['fan_count'] < self.min_fan_count:
+            if page['fan_count'] < self.min_fan_count or ( not self.specific or not page['category'] in self.specific ):
                 pages_data.pop(pages_data.index(page))
                 self.retrieved_pages -= 1
 

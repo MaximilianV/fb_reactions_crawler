@@ -19,16 +19,20 @@ def parse_arguments():
     parser.add_argument('-l, --limit', dest='limit', action='store', default=200, type=int, metavar='rate_limit', help='limit of API requests per hour')
     parser.add_argument('-e, --erase', dest='erase', action='store', default=False, type=bool, metavar='erase', help='erase existing files')
     parser.add_argument('-f, --file', dest='file', type=open, help='a json file [{"id": xxxx, "name": "page_name"}]')
+    parser.add_argument('-sp, --specific', dest='specific', action='store', type=open, help='only crawl specific pages from category list')
     parser.add_argument('-s, --skip', dest='skip', action='count', help='skip steps 0-4')
     parser.add_argument('-v, --value', dest='value', action='store', default=0.5, type=float, metavar='value', help='how many difference between main and other reactions in %')
     parser.add_argument('-nj, --nojoy', dest='nojoy', action='count', help='show or not joy reaction')
     return parser.parse_args()
 
 
-def crawl_facebook(access_token, count, limit, min_fan_count):
-	crawler = FacebookCrawler(access_token, min_fan_count)
+def crawl_facebook(access_token, count, limit, min_fan_count, specific):
+	crawler = FacebookCrawler(access_token, min_fan_count, specific)
 	pages = crawler.get_facebook_pages(count, limit)
-	output_name = "data/" + "FacebookCrawl" + str( datetime.now().isoformat(timespec='seconds').replace(":","")  ) + ".json"
+	output_name = "data/" + "FacebookCrawl" + str( datetime.now().isoformat(timespec='seconds').replace(":","")  )
+	if specific:
+		output_name += "_specific"
+	output_name += ".json"
 	with open(output_name, 'w') as outfile:
 		json.dump(pages, outfile)
 	return output_name
@@ -76,7 +80,13 @@ def main(run_args):
 		
 		if not run_args.file:
 			print("\n# 0. Crawling Facebook...")
-			fb_crawlfile = crawl_facebook(access_token, run_args.count, run_args.limit, 10000)
+			if run_args.specific:
+				specific = json.load(run_args.specific)
+				print("Specific category to get :")
+				print(specific)
+				fb_crawlfile = crawl_facebook(access_token, run_args.count, run_args.limit, 10000, specific)
+			else:
+				fb_crawlfile = crawl_facebook(access_token, run_args.count, run_args.limit, 10000, [])
 			pages = json.load(open(fb_crawlfile))
 		else:
 			pages = json.load(run_args.file)
