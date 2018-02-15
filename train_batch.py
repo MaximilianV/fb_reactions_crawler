@@ -26,11 +26,13 @@ def main(run_args):
     reactions = list(map(lambda post: Model.translate_reaction(post['reaction']), posts))
 
     for file in files:
+        if not file.endswith(".json"):
+            continue
         print(str(datetime.datetime.now()))
         print("Processing" + base_dir + file)
 
         model = Models.NaiveBayesModel.value()
-        model.select_features([Features.TfidfVectorizer, Features.CountVectorizer, Features.GoogleEmbeddingVectorizer])
+        model.select_features([Features.TfidfVectorizer, Features.CountVectorizer])
         model.train_from_file(base_dir + file)
         print(str(datetime.datetime.now()))
         print("Training finished.")
