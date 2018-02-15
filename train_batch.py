@@ -39,7 +39,10 @@ def main(run_args):
 
         # print(Counter(predicted_reactions))
         file_base = file.strip('.json')
-        with open(base_dir + file_base + "_eval_google.txt", 'w') as outfile:
+        with open(base_dir + file_base + "_eval_fairy_micro.txt", 'w') as outfile:
+            # outfile.write(metrics.classification_report(reactions, predicted_reactions, target_names=Model.reaction_labels))
+            outfile.write(str(metrics.precision_recall_fscore_support(reactions, predicted_reactions, average='micro')))
+        with open(base_dir + file_base + "_eval_fairy.txt", 'w') as outfile:
             outfile.write(metrics.classification_report(reactions, predicted_reactions, target_names=Model.reaction_labels))
         print(str(datetime.datetime.now()))
         print("Finished " + file + ".\n\n")
