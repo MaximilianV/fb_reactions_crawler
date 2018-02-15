@@ -4,6 +4,7 @@ from training.naivebayes_model import NaiveBayesModel
 from training.bernoulli_model import BernoulliModel
 from training.sgd_model import SgdModel
 from training.svc_model import SvcModel
+from training.randomforest_model import RandomForestModel
 
 
 class Models(Enum):
@@ -12,3 +13,4 @@ class Models(Enum):
     SgdModel = SgdModel
     SvcModel = SvcModel
     BernoulliModel = BernoulliModel
+    RandomForestModel = RandomForestModel
