@@ -88,7 +88,7 @@ for i in range(0,len(labels)):
 		Y_test = Y
 		
 		# Plot outputs
-		plt.scatter(X_test, Y_test,  color='black')
+		plt.scatter(X_test, Y_test, marker='.', color='black')
 		plt.xticks(())
 		plt.yticks(())		 
 
