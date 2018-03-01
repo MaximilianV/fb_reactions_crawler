@@ -1,11 +1,11 @@
 import logging
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.linear_model import SGDClassifier
 from .model import Model
 
 
-class NaiveBayesModel(Model):
+class SgdModel(Model):
     def set_model(self):
-        self.model = MultinomialNB(alpha=1e-05)
+        self.model = SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=5, tol=None)
 
     """
     def train(self, features, classification):

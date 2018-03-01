@@ -1,11 +1,11 @@
 import logging
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.naive_bayes import BernoulliNB
 from .model import Model
 
 
-class NaiveBayesModel(Model):
+class BernoulliModel(Model):
     def set_model(self):
-        self.model = MultinomialNB(alpha=1e-05)
+        self.model = BernoulliNB()
 
     """
     def train(self, features, classification):

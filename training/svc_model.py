@@ -1,11 +1,11 @@
 import logging
-from sklearn.naive_bayes import MultinomialNB
+from sklearn import svm
 from .model import Model
 
 
-class NaiveBayesModel(Model):
+class SvcModel(Model):
     def set_model(self):
-        self.model = MultinomialNB(alpha=1e-05)
+        self.model = svm.LinearSVC()
 
     """
     def train(self, features, classification):

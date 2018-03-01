@@ -1,7 +1,8 @@
 import logging
 import json
 from sklearn.externals import joblib
-from sklearn.pipeline import FeatureUnion
+from sklearn.pipeline import FeatureUnion, Pipeline
+from sklearn.model_selection import GridSearchCV
 
 
 class Model:
@@ -27,9 +28,29 @@ class Model:
     def create_feature_union(self):
         features = []
         self.ensure_is_set(self.features, "No features selected before training was started.")
-        for feature in self.features:
-            features.append((feature.name, feature.value()))
+        for feature_class in self.features:
+            features.append((feature_class.name, feature_class.value()))
         self.feature_union = FeatureUnion(features)
+
+    def train_from_array(self, x, y):
+        self.create_feature_union()
+        corpus = x
+        reactions = y
+        self.set_model()
+        pipeline = Pipeline([("features", self.feature_union), ("model", self.model)])
+        """param_grid = {'features__TfidfVectorizer__max_df': (0.5, 0.75, 1.0),
+                      'features__TfidfVectorizer__max_features': (None, 5000, 10000, 50000),
+                      'features__TfidfVectorizer__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
+                      'features__TfidfVectorizer__use_idf': (True, False)}
+                      # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
+                      # 'model__alpha': (0.00001, 0.000001)}
+        """
+        pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
+                            features__TfidfVectorizer__max_features=None,
+                            features__TfidfVectorizer__ngram_range=(1,2),
+                            features__TfidfVectorizer__use_idf=False)
+
+        pipeline.fit(corpus, reactions)
 
     def train_from_file(self, file):
         self.create_feature_union()
@@ -37,11 +58,37 @@ class Model:
         with open(file, 'r') as infile:
             posts = json.load(infile)
         self.logger.debug("Converting posts to corpus array.")
-        corpus = map(lambda post: post['message'], posts)
+        corpus = list(map(lambda post: post['message'], posts))
         reactions = list(map(lambda post: Model.translate_reaction(post['reaction']), posts))
-        self.train(self.feature_union.fit_transform(corpus), reactions)
+        self.set_model()
+        pipeline = Pipeline([("features", self.feature_union), ("model", self.model)])
+        """param_grid = {'features__TfidfVectorizer__max_df': (0.5, 0.75, 1.0),
+                      'features__TfidfVectorizer__max_features': (None, 5000, 10000, 50000),
+                      'features__TfidfVectorizer__ngram_range': ((1, 1), (1, 2)),  # unigrams or bigrams
+                      'features__TfidfVectorizer__use_idf': (True, False)}
+                      # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
+                      # 'model__alpha': (0.00001, 0.000001)}
+        """
+        """pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
+                            features__TfidfVectorizer__max_features=None,
+                            features__TfidfVectorizer__ngram_range=(1,2),
+                            features__TfidfVectorizer__use_idf=False)
+        """
+        pipeline.fit(corpus, reactions)
 
-    def train(self, features, classification):
+        """
+        grid_search = GridSearchCV(pipeline, param_grid, verbose=1, n_jobs=-1)
+        grid_search.fit(list(corpus), reactions)
+        print("BEST MODEL:")
+        print(grid_search.best_estimator_)
+        print("Best score: %0.3f" % grid_search.best_score_)
+        print("Best parameters set:")
+        best_parameters = grid_search.best_estimator_.get_params()
+        for param_name in sorted(best_parameters.keys()):
+            print("\t%s: %r" % (param_name, best_parameters[param_name]))
+        """
+
+    def set_model(self):
         pass
 
     def extract_features_from_document(self, document):

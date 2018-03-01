@@ -1,11 +1,11 @@
 import logging
-from sklearn.naive_bayes import MultinomialNB
+from sklearn.ensemble import RandomForestClassifier
 from .model import Model
 
 
-class NaiveBayesModel(Model):
+class RandomForestModel(Model):
     def set_model(self):
-        self.model = MultinomialNB(alpha=1e-05)
+        self.model = RandomForestClassifier(max_depth=2, random_state=0)
 
     """
     def train(self, features, classification):
