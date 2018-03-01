@@ -17,13 +17,16 @@ def parse_arguments():
 
 
 def main(run_args):
-    files = os.listdir(run_args.datafolder)
-    base_dir = run_args.datafolder + "/"
+    # files = os.listdir(run_args.datafolder)
+    # base_dir = run_args.datafolder + "/"
 
     with open(run_args.evaluation_file, 'r') as infile:
         posts = json.load(infile)
     corpus = list(map(lambda post: post['message'], posts))
     reactions = list(map(lambda post: Model.translate_reaction(post['reaction']), posts))
+
+    files = ["r10_g10_normalized.json"]
+    base_dir = "data/datasets/64k/best/"
 
     for file in files:
         if not file.endswith(".json"):

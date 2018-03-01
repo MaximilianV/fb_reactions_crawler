@@ -69,11 +69,11 @@ class Model:
                       # 'features__TfidfVectorizer__norm': ('l1', 'l2'),
                       # 'model__alpha': (0.00001, 0.000001)}
         """
-        pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
+        """pipeline.set_params(features__TfidfVectorizer__max_df=0.5,
                             features__TfidfVectorizer__max_features=None,
                             features__TfidfVectorizer__ngram_range=(1,2),
                             features__TfidfVectorizer__use_idf=False)
-
+        """
         pipeline.fit(corpus, reactions)
 
         """
