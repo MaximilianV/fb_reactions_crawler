@@ -17,7 +17,9 @@ Virtualenv can be used to simply the process.
 Imagine you want to train your Model with facebook posts from CNN. This is the standard procedure you would do:
 1. Find the id of the page you want to crawl. The fastest way to retrieve a page id is https://findmyfbid.com/. (e.G. For CNN it is 5550296508.)
 1. Get yourself a facebook graph API access token using the graph API explorer https://developers.facebook.com/tools/explorer/.
-1. Use the crawling script.
+1. Crawl pages.
+    - ```python3 crawlpagepreferences.py YOUR_FB_ACCESS_TOKEN -c 10000```
+1. Crawling posts.
     - ```python3 crawl.py -i 5550296508 YOUR_FB_ACCESS_TOKEN```
 1. Filter the crawled data using the filter script.
     - ```python3 filter.py cnn.json```
