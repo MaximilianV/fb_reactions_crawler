@@ -17,12 +17,12 @@ def parse_arguments():
     parser.add_argument('access_token', metavar='access_token', help='a facebook access token')
     parser.add_argument('-c, --count', dest='count', action='store', default=5, type=int, metavar='page_count', help='amount of page to be fetched')
     parser.add_argument('-l, --limit', dest='limit', action='store', default=200, type=int, metavar='rate_limit', help='limit of API requests per hour')
-    parser.add_argument('-e, --erase', dest='erase', action='store', default=False, type=bool, metavar='erase', help='erase existing files')
+    parser.add_argument('-e, --erase', dest='erase', action='store', default=False, type=bool, metavar='erase', help='overwrite existing files')
     parser.add_argument('-f, --file', dest='file', type=open, help='a json file [{"id": xxxx, "name": "page_name"}]')
     parser.add_argument('-sp, --specific', dest='specific', action='store', type=open, help='only crawl specific pages from category list')
     parser.add_argument('-s, --skip', dest='skip', action='count', help='skip steps 0-4')
-    parser.add_argument('-v, --value', dest='value', action='store', default=0.5, type=float, metavar='value', help='how many difference between main and other reactions in %')
     parser.add_argument('-nj, --nojoy', dest='nojoy', action='count', help='show or not joy reaction')
+    parser.add_argument('-v, --value', dest='value', action='store', default=0.5, type=float, metavar='value', help='how many difference between main and other reactions in percent')
     return parser.parse_args()
 
 

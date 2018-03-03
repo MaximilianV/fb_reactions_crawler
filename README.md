@@ -17,9 +17,9 @@ Virtualenv can be used to simply the process.
 Imagine you want to train your Model with facebook posts from CNN. This is the standard procedure you would do:
 1. Find the id of the page you want to crawl. The fastest way to retrieve a page id is https://findmyfbid.com/. (e.G. For CNN it is 5550296508.)
 1. Get yourself a facebook graph API access token using the graph API explorer https://developers.facebook.com/tools/explorer/.
-1. Crawl pages.
-    - ```python3 crawlpagepreferences.py YOUR_FB_ACCESS_TOKEN -c 10000```
-1. Crawling posts.
+1. Or crawl pages. (dont forget to create /data/datasets folder)
+    - ```python3 crawlpagepreferences.py YOUR_FB_ACCESS_TOKEN -c 500```
+1. Crawling posts. 
     - ```python3 crawl.py -i 5550296508 YOUR_FB_ACCESS_TOKEN```
 1. Filter the crawled data using the filter script.
     - ```python3 filter.py cnn.json```
@@ -33,6 +33,38 @@ Imagine you want to train your Model with facebook posts from CNN. This is the s
 ## 2. Documentation
 
 ### a. Crawling Data
+
+The usage of the script `crawlpagepreferences.py` is as follows:
+```
+usage: crawlpagepreferences.py [-h] [-c, --count page_count]
+                               [-l, --limit rate_limit] [-e, --erase erase]
+                               [-f, --file FILE] [-sp, --specific SPECIFIC]
+                               [-s, --skip] [-nj, --nojoy] [-v, --value value]
+                               access_token
+
+Crawl facebook and represent page preferences.
+
+positional arguments:
+  access_token          a facebook access token
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -c, --count page_count
+                        amount of page to be fetched
+  -l, --limit rate_limit
+                        limit of API requests per hour
+  -e, --erase erase     overwrite existing files
+  -f, --file FILE       a json file [{"id": xxxx, "name": "page_name"}, ...]
+  -sp, --specific SPECIFIC
+                        only crawl specific pages from category list
+  -s, --skip            skip steps 0-4 (Crawling datas)
+  -nj, --nojoy          show or not joy reaction
+  -v, --value value     how many difference between main and other reactions
+                        in percent
+```
+You can also provide a file in order to only plot preferences figures.
+To only crawl specific pages from category list, please provide a list of category (one by line) in a external file.
+
 
 The usage of the script `crawl.py` is as follows:
 ```

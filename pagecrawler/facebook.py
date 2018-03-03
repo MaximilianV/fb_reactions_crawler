@@ -56,6 +56,7 @@ class Facebook:
 	# Recursiv crawling
     def get_pages_r(self, page_id, count, depth, pages_data_to_test):
         pages_data = []
+		
         if self.retrieved_pages < count and depth < 20:
 
             remaining_pages = count - self.retrieved_pages
@@ -71,8 +72,7 @@ class Facebook:
                 self.retrieved_pages += result.count()
                 if result.count()>0:
                       for page in pages_data:
-                          print(self.specific)
-                          if page['fan_count'] < self.min_fan_count or ( not self.specific or not  page['category'] in self.specific ):
+                          if page['fan_count'] < self.min_fan_count or ( len(self.specific) > 0 and not page['category'] in self.specific ):
                              pages_data.pop(pages_data.index(page))
                              self.retrieved_pages -= 1
                       if pages_data:
