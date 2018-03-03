@@ -12,11 +12,12 @@ class FacebookResponse:
             return data
 
         # Check if its a reaction response
-        first_key = list(self.complete_response.keys())[0]
-        if "like" in self.complete_response[first_key]:
-            return self.extract_reaction_content()
+        if self.complete_response.keys():
+            first_key = list(self.complete_response.keys())[0]
+            if "like" in self.complete_response[first_key]:
+                return self.extract_reaction_content()
 
-        raise Exception("Couldn't identify response content.")
+        return []
 
     def extract_reaction_content(self):
         reaction_response = {}

@@ -19,8 +19,10 @@ def crawl_page(access_token, page_id, count, limit, output_name=None):
     reactions = crawler.get_latest_posts_with_reactions(count, limit)
     if not output_name:
         output_name = str(page_id)
-    with open(output_name, 'w') as outfile:
+    filename = "data/datasets/" + output_name + ".json" 
+    with open(filename, 'w') as outfile:
         json.dump(reactions, outfile)
+    return filename
 
 
 def main(run_args):
@@ -28,7 +30,7 @@ def main(run_args):
     if run_args.file:
         pages_config = json.load(run_args.file)
         for page in pages_config:
-            crawl_page(access_token, page['id'], run_args.count, run_args.limit, output_name=page['name'])
+            crawl_page(access_token, page['id'], run_args.count, run_args.limit, output_name=page['id'])
     else:
         crawl_page(access_token, run_args.page_id, run_args.count, run_args.limit)
 
